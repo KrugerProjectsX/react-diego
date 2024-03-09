@@ -1,5 +1,5 @@
 import {Box, Button, TextField} from "@mui/material";
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import {db} from "../firebase";
 import { collection, query,where,getDocs } from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,12 @@ export default function Login() {
     const password = useRef("");
     const usersRef =  collection(db,'users');
     const navigate = useNavigate();
+    const [isProgress, setIsProgress] = useState(false);
 
 
     const login = async (e) =>{
         e.preventDefault();
-        
+        setIsProgress(true);
         console.log(email.current.value, password.current.value)
         const search = query(usersRef, where("email" , "==" , email.current.value))
         
@@ -26,17 +27,18 @@ export default function Login() {
                 console.log("login success");
                 console.log("Redirect");
                 localStorage.setItem('user_logged', JSON.stringify(user_id));
+                setIsProgress(false);
                 navigate('/dashboard', { replace: true });
                 
             }else{
                 console.log("Password incorrect")
+                setIsProgress(false);
             }
         }else{
             console.log("User not found")
+            setIsProgress(false);
         }
-        
-
-
+        setIsProgress(false);
     }
     return (
         <>
@@ -46,7 +48,7 @@ export default function Login() {
             <Box component="form" onSubmit={login} sx={{p: 2, border: '1px dashed grey'}}>
                 <TextField label="Email" inputRef={email} className={"w-full my-4"} variant="outlined" type="email"/>
                 <TextField label="Password" inputRef={password} className={"w-full my-4"} variant="outlined" type="password"/>
-                <Button type="submit" className={"my-4"}  variant="contained">Login</Button>
+                <Button type="submit" disabled={isProgress} className={"my-4"}  variant="contained">Login</Button>
             </Box>
         </>
 
