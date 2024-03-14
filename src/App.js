@@ -1,11 +1,13 @@
 
 import './App.css';
-import {Slider} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AddFlat from "./pages/AddFlat";
 import Flats from "./pages/Flats";
+import Profile from "./pages/Profile";
+import ProfileUpdate from "./pages/ProfileUpdate";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -14,6 +16,9 @@ function App() {
           <Route path={"/dashboard"} element={<Home/>}  />
           <Route path={"/flats"} element={<Flats/>}  />
           <Route path={"/flats/new"} element={<AddFlat/>}  />
+          <Route path={"/profile"} element={<Profile/>}/>
+          <Route path={"/profile/edit"} element={<ProfileUpdate/>}/>
+          <Route path={"/register"} element={<Register/>}/>
       </Routes>
   );
 }
