@@ -20,6 +20,7 @@ export default function Header() {
     const getUserData = async () => {
         const dataUser = await getDoc(ref);
         const responseUser = {...dataUser.data()};
+        console.log(responseUser);
         setUser(responseUser);
     }
     useEffect(() => {
@@ -40,6 +41,7 @@ export default function Header() {
                         <Button className={'text-secondary'}>Home</Button>
                         <Button className={'text-secondary'}>My Flats</Button>
                         <Button className={'text-secondary'}>Favourites</Button>
+                        { user && user.role ==='admin' && <Button className={'text-secondary'}>Users</Button>}
                     </div>
                     <MenuTransitions user={user} setUser={setUser}/>
                 </Toolbar>
