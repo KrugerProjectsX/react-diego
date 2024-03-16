@@ -15,26 +15,9 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
-export default function MenuTransitions() {
+export default function MenuTransitions({user, setUser}) {
 
     const navigate = useNavigate()
-    const userId = JSON.parse(localStorage.getItem('user_logged')) || [];
-    const [user, setUser] = useState(null);
-    const [userLoaded, setUserLoaded] = useState(false);
-    const ref = doc(db, "users", userId);
-
-    const processData = async () => {
-        await getUserData();
-    }
-
-    const getUserData = async () => {
-        const dataUser = await getDoc(ref);
-        const responseUser = {...dataUser.data()};
-        setUser(responseUser);
-    }
-    useEffect(() => {
-        processData();
-    }, [])
 
     const logout = () => {
         // Remove user information from localStorage
