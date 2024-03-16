@@ -8,6 +8,7 @@ import Flats from "./pages/Flats";
 import Profile from "./pages/Profile";
 import ProfileUpdate from "./pages/ProfileUpdate";
 import Register from "./pages/Register";
+import MyFlats from "./pages/MyFlats";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path={"/profile"} element={<Profile/>}/>
           <Route path={"/profile/edit"} element={<ProfileUpdate/>}/>
           <Route path={"/register"} element={<Register/>}/>
+          <Route path={"/my-flats"} element={<MyFlats/>}/>
       </Routes>
   );
 }

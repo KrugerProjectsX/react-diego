@@ -60,7 +60,7 @@ export default function UserForm({ type }) {
             birthDate: birthDateRef.current.value,
         }
         if (type === 'create') {
-            userSend = { ...userSend, password: passwordRef.current.value }
+            userSend = { ...userSend, password: passwordRef.current.value, role: 'guest' }
             await addDoc(refCreate, userSend);
             
         }
