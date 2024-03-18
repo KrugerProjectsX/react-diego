@@ -17,21 +17,17 @@ export default function UsersTable() {
 
     const getData = async () => {
         const data = await getDocs(ref);
-        const usersSet = new Set(); // Conjunto para almacenar usuarios únicos
+        const usersSet = []; // Conjunto para almacenar usuarios únicos
 
         // Iterar sobre los usuarios y agregarlos al conjunto
         for (const item of data.docs) {
             const search = query(refFlats, where("user", "==", item.id));
             const dataFlats = await getDocs(search);
             const userWithFlats = {...item.data(), id: item.id, flats: dataFlats.docs?.length};
-            usersSet.add(JSON.stringify(userWithFlats)); // Convertir el objeto a cadena JSON para comparación
+            usersSet.push(userWithFlats);
         }
 
-        // Convertir el conjunto de usuarios de vuelta a un array
-        const uniqueUsers = Array.from(usersSet).map(userString => JSON.parse(userString));
-
-        // Establecer el estado de los usuarios
-        setUsers(uniqueUsers);
+        setUsers(usersSet);
     };
 
     useEffect(() => {
