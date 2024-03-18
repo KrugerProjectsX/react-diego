@@ -13,6 +13,7 @@ import Users from "./pages/Users";
 
 function App() {
   return (
+      
       <Routes>
           <Route path={"/"} element={<Login/>}  />
           <Route path={"/dashboard"} element={<Home/>}  />
@@ -23,6 +24,7 @@ function App() {
           <Route path={"/register"} element={<Register/>}/>
           <Route path={"/my-flats"} element={<MyFlats/>}/>
           <Route path={"/users"} element={<Users/>}/>
+          
       </Routes>
   );
 }

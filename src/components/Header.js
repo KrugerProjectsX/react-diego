@@ -6,20 +6,19 @@ import Button from '@mui/material/Button';
 import MenuTransitions from "./MenuTransitions";
 import {doc, getDoc} from "firebase/firestore";
 import {db} from "../firebase";
+import {getUser, getUserLogged} from "../services/users";
 
 export default function Header() {
     const userId = JSON.parse(localStorage.getItem('user_logged')) || false;
     const [user, setUser] = useState(null);
     const [userLoaded, setUserLoaded] = useState(false);
-    const ref = doc(db, "users", userId);
 
     const processData = async () => {
         await getUserData();
     }
 
     const getUserData = async () => {
-        const dataUser = await getDoc(ref);
-        const responseUser = {...dataUser.data()};
+        const responseUser = await getUserLogged();
         console.log(responseUser);
         setUser(responseUser);
     }
