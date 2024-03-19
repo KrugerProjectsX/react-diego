@@ -9,9 +9,7 @@ import {db} from "../firebase";
 import {getUser, getUserLogged} from "../services/users";
 
 export default function Header() {
-    const userId = JSON.parse(localStorage.getItem('user_logged')) || false;
     const [user, setUser] = useState(null);
-    const [userLoaded, setUserLoaded] = useState(false);
 
     const processData = async () => {
         await getUserData();
