@@ -4,7 +4,7 @@ export default function Register() {
     return (
         <div>
             <h1>Register</h1>
-            <UserForm type={'create'}/>
+            <UserForm type={'create'} id={null}/>
         </div>
     );
 }

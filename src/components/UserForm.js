@@ -5,7 +5,7 @@ import { db } from "../firebase";
 import * as React from "react";
 
 
-export default function UserForm({ type }) {
+export default function UserForm({ type, userId}) {
     const currentDate = new Date().toJSON().slice(0, 10);
 
     const [user, setUser] = useState({
@@ -21,11 +21,13 @@ export default function UserForm({ type }) {
     const passwordRef = useRef('');
     const birthDateRef = useRef('');
     const userTypeRef = useRef('landlords');
-    const id = JSON.parse(localStorage.getItem('user_logged'));
     const refCreate = collection(db, "users");
-    let ref = null;
-    if (id){
-         ref = doc(db, "users", id);
+    let  ref = null;
+    if (userId == null && type !== 'create') {
+         userId = JSON.parse(localStorage.getItem('user_logged'));
+    }
+    if ( userId && type !== 'create'){
+        ref = doc(db, "users", userId);
     }
     
     const today = new Date();
