@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from "react";
 import {db} from "../firebase";
 import {collection, addDoc, doc, getDoc} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { Api } from "../services/api";
 
 
 export default function FlatForm({type, id}) {
@@ -51,10 +52,13 @@ export default function FlatForm({type, id}) {
             yearBuilt: yearBuilt.current.value,
             rentPrice: rentPrice.current.value,
             dateAvailable: dateAvailable.current.value,
-            user: JSON.parse(localStorage.getItem('user_logged'))
+            // user: JSON.parse(localStorage.getItem('user_logged'))
         }
         if (type === 'create') {
-            await addDoc(ref, flat);
+            const api = new Api();
+            const result =  api.post('flats',flat);
+            console.log(result);
+            // await addDoc(ref, flat);
             navigate('/flats', { replace: false });
         }
         

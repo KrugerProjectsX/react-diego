@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
+import {Api} from "../services/api";
 
 export default function Login() {
     const emailRef = useRef("");
@@ -18,30 +19,21 @@ export default function Login() {
 
         const emailValue = emailRef.current.value;
         const passwordValue = passwordRef.current.value;
-
+        
+        const api = new Api();
         try {
-            const querySnapshot = await getDocs(query(usersRef, where("email", "==", emailValue)));
-            if (!querySnapshot.empty) {
-                const user = querySnapshot.docs[0].data();
-                const userId = querySnapshot.docs[0].id;
+            const result = await api.post('users/login',{email:emailValue,password:passwordValue});
+            if (result.data.status === 'success') {
+                
+                localStorage.setItem('user_logged', JSON.stringify(result.data.token));
+                localStorage.setItem('user_data_logged', JSON.stringify(result.data.data));
+                navigate('/dashboard', { replace: true });
 
-                if (user.password === passwordValue) {
-                    console.log("Login success");
-                    localStorage.setItem('user_logged', JSON.stringify(userId));
-                    setIsProgress(false);
-                    navigate('/dashboard', { replace: true });
-                    return;
-                } else {
-                    setErrorAlert("Contraseña incorrecta");
-                }
-            } else {
-                setErrorAlert("Usuario no encontrado");
             }
-        } catch (error) {
-            console.error("Error al iniciar sesión:", error);
-            setErrorAlert("Ocurrió un error al iniciar sesión. Por favor, inténtelo de nuevo más tarde.");
+            
+        }catch (error) {
+            setErrorAlert(error.response.data.message);
         }
-
         setIsProgress(false);
     }
 

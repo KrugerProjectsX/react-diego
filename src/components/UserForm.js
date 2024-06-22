@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import {doc, updateDoc, getDoc, collection, addDoc} from "firebase/firestore";
 import { db } from "../firebase";
 import * as React from "react";
+import { Api } from "../services/api";
+import {useNavigate} from "react-router-dom";
 
 
 export default function UserForm({ type, userId}) {
@@ -22,9 +24,11 @@ export default function UserForm({ type, userId}) {
     const birthDateRef = useRef('');
     const userTypeRef = useRef('landlords');
     const refCreate = collection(db, "users");
+    const navigate = useNavigate();
     let  ref = null;
+    const userLogged = JSON.parse(localStorage.getItem('user_logged'));
     if (userId == null && type !== 'create') {
-         userId = JSON.parse(localStorage.getItem('user_logged'));
+         userId = userLogged;
     }
     if ( userId && type !== 'create'){
         ref = doc(db, "users", userId);
@@ -67,7 +71,21 @@ export default function UserForm({ type, userId}) {
         
         if (type === 'create') {
             userSend = { ...userSend, password: passwordRef.current.value }
-            await addDoc(refCreate, userSend);
+            
+            const api = new Api();
+            const result = await api.post('users/register',userSend);
+            const message = result.data.message;
+            const data = result.data.data;
+            const token = result.data.token;
+            
+            if(message ==='User Created' && token){
+                localStorage.setItem('user_logged', JSON.stringify(token));
+                localStorage.setItem('user_data_logged', JSON.stringify(data));
+                navigate('/dashboard', { replace: true });
+            }
+            
+            console.log(result);
+            // await addDoc(refCreate, userSend);
             
         }
 

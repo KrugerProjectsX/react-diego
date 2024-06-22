@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import {getDocs, query, where, collection, addDoc, doc, deleteDoc, getDoc} from "firebase/firestore";
 import { db } from "../firebase";
 import {Button} from "@mui/material";
+import {Api} from "../services/api";
 
 
 // @Params: type: "my-flats" | "all-flats" | "favorite-flats"
@@ -31,19 +32,24 @@ export default function FlatsTable({ type }) {
             setFlats(rows);
         }
         if (type === 'all-flats') {
-            const data = await getDocs(ref);
-            const allFlats = [];
-            for(const item of data.docs){
-                
-                const search = query(refFav, where("userId", "==",userId ), where('flatId','==',item.id));
-                const dataFav = await getDocs(search);
-                let favorite =false;
-                if(dataFav.docs.length > 0){
-                    favorite = dataFav.docs[0].id;
-                }
-                const flatsWithFav = {...item.data(), id: item.id, favorite: favorite};
-                allFlats.push(flatsWithFav)
-            }
+            // const data = await getDocs(ref);
+            let allFlats = [];
+            const api = new Api();
+            const response = await api.get('flats');
+            allFlats = response.data.data;
+            
+            
+            // for(const item of data.docs){
+            //    
+            //     const search = query(refFav, where("userId", "==",userId ), where('flatId','==',item.id));
+            //     const dataFav = await getDocs(search);
+            //     let favorite =false;
+            //     if(dataFav.docs.length > 0){
+            //         favorite = dataFav.docs[0].id;
+            //     }
+            //     const flatsWithFav = {...item.data(), id: item.id, favorite: favorite};
+            //     allFlats.push(flatsWithFav)
+            // }
             setFlats(allFlats);
         }
         
@@ -99,19 +105,19 @@ export default function FlatsTable({ type }) {
                 </TableHead>
                 <TableBody className="bg-white divide-y divide-gray-200">
                     {flats.map((row) => (
-                        <TableRow key={row.id}>
+                        <TableRow key={row._id}>
                             <TableCell className="px-6 py-4 whitespace-nowrap">{row.city}</TableCell>
                             <TableCell className="px-6 py-4 whitespace-nowrap" >{row.areaSize}</TableCell>
                             <TableCell className="px-6 py-4 whitespace-nowrap" >{row.rentPrice}</TableCell>
                             <TableCell className="px-6 py-4 whitespace-nowrap" >{row.hasAc ? 'Yes' : 'No'}</TableCell>
                             <TableCell className="px-6 py-4 whitespace-nowrap" >{row.dateAvailable}</TableCell>
                             {(type === 'all-flats'|| type=== 'favorite-flats') && <TableCell className="px-6 py-4 whitespace-nowrap" >
-                                {!row.favorite && <Button onClick={()=>addFavorite(row.id)}>Add Favorite</Button>}
+                                {!row.favorite && <Button onClick={()=>addFavorite(row._id)}>Add Favorite</Button>}
                                 {row.favorite && <Button onClick={()=>removeFavorite(row.favorite)}>Remove Favorite</Button>}
                             </TableCell> }
                             <TableCell className="px-6 py-4 whitespace-nowrap">
-                                <Button href={`/flat/${row.id}`} >View</Button>
-                                {type === 'my-flats' && <Button href={`/flats/edit/${row.id}`} >Edit</Button>}
+                                <Button href={`/flat/${row._id}`} >View</Button>
+                                {type === 'my-flats' && <Button href={`/flats/edit/${row._id}`} >Edit</Button>}
                             </TableCell>
                         </TableRow>
                     ))}
