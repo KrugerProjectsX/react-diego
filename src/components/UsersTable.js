@@ -26,54 +26,23 @@ export default function UsersTable() {
       let filter= ''
         
         if (userType){
+            if (filter){
+                filter+= '&';
+            }
             filter+= `filter[role]=${userType}`;
+        }
+        if (flatsCounter){
+            if (filter){
+                filter+= '&';
+            }
+            filter+= `filter[flatsCounter]=${flatsCounter}`;
         }
         let page = 0;
         
-        // const today = new Date();
-        // const minBirthDate = new Date(today.getFullYear() - valueSlider[0], today.getMonth(), today.getDate()).toISOString().split('T')[0];
-        // const maxBirthDate = new Date(today.getFullYear() - valueSlider[1], today.getMonth(), today.getDate()).toISOString().split('T')[0];
-        // if (valueSlider && valueSlider.length > 1){
-        //     arrayWhere.push(where("birthDate", ">=",maxBirthDate));
-        //     arrayWhere.push( where("birthDate", "<=",minBirthDate));
-        // }
-        //
-        // const searchUser = query(ref, ...arrayWhere);
-
-        // const data = await getDocs(searchUser);
-        // const usersSet = []; // Conjunto para almacenar usuarios únicos
         const api = new Api();
         const result = await api.get('users/?'+filter );
         console.log(result);
         const usersSet = result.data.data
-        
-
-        // Iterar sobre los usuarios y agregarlos al conjunto
-        // for (const item of data.docs) {
-        //     const search = query(refFlats, where("user", "==", item.id));
-        //     const dataFlats = await getDocs(search);
-        //    
-        //     if (flatsCounter){
-        //         const flatsValue = flatsCounter.split('-');
-        //         if(flatsValue.length > 1){
-        //             const min = flatsValue[0];
-        //             const max = flatsValue[1];
-        //             if (dataFlats.docs?.length < min || dataFlats.docs?.length > max){
-        //                 continue;
-        //             }
-        //         }else{
-        //             if(flatsValue[0] ==='61+'){
-        //                 if (dataFlats.docs?.length < 61){
-        //                     continue;
-        //                 }
-        //             }
-        //         }
-        //        
-        //     }
-        //     const userWithFlats = {...item.data(), id: item.id, flats: dataFlats.docs?.length};
-        //    
-        //     usersSet.push(userWithFlats);
-        // }
 
         setUsers(usersSet);
     };
